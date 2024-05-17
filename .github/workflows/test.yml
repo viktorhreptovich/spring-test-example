@@ -51,7 +51,7 @@ jobs:
         if: always()
         with:
           name: jacoco-report
-          path: target/reports/jacoco
+          path: target/reports/jacoco-report
           retention-days: 1
       - name: Upload allure report
         uses: actions/upload-artifact@v4
@@ -99,21 +99,21 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: allure-report
-      url: ${{ needs.deploy-reports.outputs.report-url }}/allure-report
+      url: ${{ needs.deploy-reports.outputs.report-url }}allure-report
     needs: [ deploy-reports ]
     steps:
       - name: Add report url
         run: |
           echo "Allure Report:" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.deployment.outputs.page_url }}/allure-report" >> $GITHUB_STEP_SUMMARY
+          echo "${{ needs.deploy-reports.outputs.report-url }}allure-report" >> $GITHUB_STEP_SUMMARY
   coverage-report:
     runs-on: ubuntu-latest
     environment:
       name: coverage-report
-      url: ${{ needs.deploy-reports.outputs.report-url }}/jacoco-report
+      url: ${{ needs.deploy-reports.outputs.report-url }}jacoco-report
     needs: [ deploy-reports ]
     steps:
       - name: Add report url
         run: |
           echo "Coverage Report:" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.deployment.outputs.page_url }}/jacoco-report" >> $GITHUB_STEP_SUMMARY
+          echo "${{ needs.deploy-reports.outputs.report-url }}jacoco-report" >> $GITHUB_STEP_SUMMARY
